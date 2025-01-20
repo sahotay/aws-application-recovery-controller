@@ -1,2 +1,1 @@
-# aws-application-recovery-controller
-AWS application recovery controller (ARC)
+# AWS application recovery controller (ARC)

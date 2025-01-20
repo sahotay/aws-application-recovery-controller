@@ -1,0 +1,23 @@
+{
+    "name": "AWS CDK Development Container",
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-18",
+    "features": {
+        "aws-cli": "latest"
+    },
+    "postCreateCommand": [
+        "npm install -g aws-cdk",
+        "npm install -g npm"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "dbaeumer.vscode-eslint",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-docker"
+    ],
+    "runArgs": [
+        "--init",
+        "--privileged"
+    ]
+}
