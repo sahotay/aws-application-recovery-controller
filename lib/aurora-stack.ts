@@ -5,7 +5,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 export function createGlobalAuroraCluster(stack: cdk.Stack, region: string) {
   const globalCluster = new rds.CfnGlobalCluster(stack, 'AuroraGlobalCluster', {
-    globalClusterIdentifier: 'le-arc-app-global-db',
+    globalClusterIdentifier: 'arc-app-global-db',
     engine: 'aurora-postgresql',
   });
 
@@ -23,7 +23,7 @@ export function createAuroraCluster(stack: cdk.Stack, region: string, subnetIds:
   const dbCluster = new rds.CfnDBCluster(stack, `AuroraCluster${region}`, {
     engine: 'aurora-postgresql',
     globalClusterIdentifier: globalClusterIdentifier,
-    dbClusterIdentifier: `le-arc-app-${region}`,
+    dbClusterIdentifier: `arc-app-${region}`,
     dbSubnetGroupName: createDbSubnetGroup(stack, `${region}DbSubnetGroup`, subnetIds),
     masterUsername: isPrimaryRegion ? 'rahul' : undefined,
     masterUserPassword: isPrimaryRegion ? 'password' : undefined,
