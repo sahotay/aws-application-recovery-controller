@@ -20,12 +20,12 @@ export class AwsApplicationRecoveryControllerStack extends cdk.Stack {
     const vpc = ec2.Vpc.fromVpcAttributes(this, `Vpc-${region}`, {
       vpcId: vpcConfig.vpcId,
       availabilityZones: vpcConfig.availabilityZones,
-      privateSubnetIds: vpcConfig.privateSubnets,
+      privateSubnetIds: vpcConfig.dbSubnets,
     });
 
     // S3 Bucket
     const bucket = new s3.Bucket(this, `AppBucket-${region}`, {
-      bucketName: `le-arc-app-ss-dev-${region.replace(/-/g, '')}-s3`,
+      bucketName: `arc-app-dev-${region.replace(/-/g, '')}-s3`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
@@ -73,12 +73,12 @@ export class AwsApplicationRecoveryControllerStack extends cdk.Stack {
       handler: 'processor.handler',
       environment: {
         QUEUE_URL: mainQueue.queueUrl,
-        DB_CLUSTER_ARN: `arn:aws:rds:${region}:${cdk.Stack.of(this).account}:cluster/le-arc-app-global-db`,
-        DB_SECRET_ARN: `arn:aws:secretsmanager:${region}:${cdk.Stack.of(this).account}:secret:le-arc-app-db-secret`,
+        DB_CLUSTER_ARN: `arn:aws:rds:${region}:${cdk.Stack.of(this).account}:cluster/arc-app-global-db`,
+        DB_SECRET_ARN: `arn:aws:secretsmanager:${region}:${cdk.Stack.of(this).account}:secret:arc-app-db-secret`,
       },
       vpc: vpc,
       vpcSubnets: { 
-        subnets: (region === 'us-east-1' ? VPC_EAST.lambdaSubnets : VPC_WEST.lambdaSubnets).map((id, index) =>
+        subnets: (region === 'us-east-1' ? VPC_EAST.privateSubnets : VPC_WEST.privateSubnets).map((id, index) =>
           ec2.Subnet.fromSubnetId(this, `Subnet-${id}-${index}`, id)
         ),
       },
@@ -101,9 +101,9 @@ export class AwsApplicationRecoveryControllerStack extends cdk.Stack {
       const globalCluster = createGlobalAuroraCluster(this, region);
       globalClusterIdentifier = globalCluster.globalClusterIdentifier;
     } else {
-      globalClusterIdentifier = 'le-arc-app-global-db';
+      globalClusterIdentifier = 'arc-app-global-db';
     }
-    createAuroraCluster(this, region, region === 'us-east-1' ? VPC_EAST.privateSubnets : VPC_WEST.privateSubnets, "le-arc-app-global-db", auroraSecurityGroup.securityGroupId);
+    createAuroraCluster(this, region, region === 'us-east-1' ? VPC_EAST.dbSubnets : VPC_WEST.dbSubnets, "arc-app-global-db", auroraSecurityGroup.securityGroupId);
 
     // API Gateway for POST operation
     const postApiLambda = new lambda.Function(this, `ApiHandler-${region}`, {
@@ -115,7 +115,7 @@ export class AwsApplicationRecoveryControllerStack extends cdk.Stack {
       },
       vpc: vpc,
       vpcSubnets: { 
-        subnets: (region === 'us-east-1' ? VPC_EAST.lambdaSubnets : VPC_WEST.lambdaSubnets).map(id =>
+        subnets: (region === 'us-east-1' ? VPC_EAST.privateSubnets : VPC_WEST.privateSubnets).map(id =>
           ec2.Subnet.fromSubnetId(this, `Subnet-${id}`, id)
         ),
       },

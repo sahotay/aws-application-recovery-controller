@@ -5,18 +5,18 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 
 export function createSQSQueue(stack: cdk.Stack, region: string) {
   const dlq = new sqs.Queue(stack, `DLQ-${region}`, {
-    queueName: `arc-app-ss-dev-${region}-dlq`,
+    queueName: `arc-app-dev-${region}-dlq`,
   });
 
   return new sqs.Queue(stack, `MainQueue-${region}`, {
-    queueName: `arc-app-ss-dev-${region}-q`,
+    queueName: `arc-app-dev-${region}-q`,
     deadLetterQueue: { maxReceiveCount: 5, queue: dlq },
   });
 }
 
 export function createLambdaFunction(stack: cdk.Stack, queue: sqs.Queue, region: string) {
   const lambdaFunction = new lambda.Function(stack, `Lambda-${region}`, {
-    functionName: `arc-app-ss-dev-${region}-lambda`,
+    functionName: `arc-app-dev-${region}-lambda`,
     runtime: lambda.Runtime.NODEJS_18_X,
     code: lambda.Code.fromInline(`
       exports.handler = async (event) => ({

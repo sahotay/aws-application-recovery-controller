@@ -1,14 +1,14 @@
 export const VPC_EAST = {
-    vpcId: 'vpc-0d12688654777c285',
-    privateSubnets: ['subnet-0a42745a34f3524d3', 'subnet-0c28753e9c4250166'],
-    lambdaSubnets:  ['subnet-0a42745a34f3524d3', 'subnet-0c28753e9c4250166'],
+    vpcId: 'vpc-03848b3c59263f89f',
+    privateSubnets: ['subnet-059a2bf9c0a8b6b35', 'subnet-0abbbdd040455ab2c'],
+    dbSubnets:  ['subnet-0e33baf76e8f65a66', 'subnet-0c6e15d0381da9232'],
     availabilityZones: ['us-east-1a', 'us-east-1b'],
   };
   
   export const VPC_WEST = {
-    vpcId: 'vpc-086441cb4194f9ba8',
-    privateSubnets: ['subnet-01bf123828d7f83a3', 'subnet-07dafaaccf786486d'],
-    lambdaSubnets:  ['subnet-01bf123828d7f83a3', 'subnet-07dafaaccf786486d'],
+    vpcId: 'vpc-0ccb0ac631e6da198',
+    privateSubnets: ['subnet-0ebcd0b437fd81b63', 'subnet-025001b94b85ee5ba'],
+    dbSubnets:  ['subnet-08de607fe10524488', 'subnet-03b530f321caba5fc'],
     availabilityZones: ['us-west-2a', 'us-west-2b'],
   };
   
